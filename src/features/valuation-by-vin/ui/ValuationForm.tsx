@@ -1,5 +1,15 @@
 import { useState } from 'react';
 
+const keyframes = `
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+`;
+
+const style = document.createElement('style');
+style.innerHTML = keyframes;
+document.head.appendChild(style);
 export const ValuationForm = () => {
   const [vin, setVin] = useState('');
   const [loading, setLoading] = useState(false);
@@ -87,34 +97,35 @@ export const ValuationForm = () => {
         </button>
       </form>
 
-      {/* Результат */}
-      {result && (
-        <div
-          style={{
-            marginTop: 40,
-            padding: 28,
-            background: '#f8fff8',
-            border: '1px solid #4caf50',
-            borderRadius: 12,
-          }}
-        >
-          <h3 style={{ color: '#2e7d32', marginBottom: 16 }}>Результат оценки</h3>
-          <p><strong>VIN:</strong> {result.vin}</p>
-          <p><strong>Автомобиль:</strong> {result.brand} {result.model} {result.year} г.</p>
-          {result.source && <p style={{ fontSize: '0.9rem', color: '#666' }}><em>{result.source}</em></p>}
+     {result && (
+  <div
+    style={{
+      marginTop: 40,
+      padding: 32,
+      background: 'linear-gradient(135deg, #f8fff8 0%, #e8f5e8 100%)',
+      border: '2px solid #4caf50',
+      borderRadius: 20,
+      animation: 'slideUp 0.6s ease-out',
+    }}
+  >
+    <h3 style={{ color: '#2e7d32', fontSize: '1.8rem', marginBottom: 16 }}>
+      Оценка готова!
+    </h3>
+    <p><strong>VIN:</strong> {result.vin}</p>
+    <p style={{ fontSize: '1.4rem', margin: '12px 0' }}>
+      <strong>{result.brand} {result.model} {result.year} г.</strong>
+    </p>
 
-          <div style={{ marginTop: 20 }}>
-            <p style={{ fontSize: '1.4rem' }}>Рыночная цена:</p>
-            <p style={{ fontSize: '2.4rem', color: '#2e7d32', fontWeight: 'bold' }}>
-              {(result.priceAvg / 1000000).toFixed(2)} млн ₽
-            </p>
-            <p style={{ color: '#555' }}>
-              Диапазон: от {(result.priceMin / 1000000).toFixed(2)} до{' '}
-              {(result.priceMax / 1000000).toFixed(2)} млн ₽
-            </p>
-          </div>
-        </div>
-      )}
+    <div style={{ textAlign: 'center', marginTop: 24 }}>
+      <div style={{ fontSize: '3rem', fontWeight: 900, color: '#2e7d32' }}>
+        {(result.priceAvg / 1000000).toFixed(2)} млн ₽
+      </div>
+      <div style={{ color: '#666', marginTop: 8 }}>
+        от {(result.priceMin / 1000000).toFixed(2)} до {(result.priceMax / 1000000).toFixed(2)} млн ₽
+      </div>
+    </div>
+  </div>
+)}
     </div>
   );
 };
