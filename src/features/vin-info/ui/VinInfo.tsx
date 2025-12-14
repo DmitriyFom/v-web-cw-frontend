@@ -1,9 +1,20 @@
 import { useState } from 'react';
-import { Globe, Factory, Car, Calendar, CheckCircle, Lock, Hash, Info } from 'lucide-react';
+import { Globe, Factory, Car, Calendar, CheckCircle, Hash, Info } from 'lucide-react';
 
 export const VinInfo = () => {
   const [vin, setVin] = useState('');
-  const upperVin = vin.toUpperCase().replace(/[^A-HJ-NPR-Z0-9]/g, '').slice(0, 17);
+
+  // Очистка и ограничение: только допустимые символы VIN, максимум 17
+  const handleVinChange = (value: string) => {
+    const cleaned = value
+      .toUpperCase()
+      .replace(/[^A-HJ-NPR-Z0-9]/g, '')  // Убираем недопустимые символы (включая I, O, Q)
+      .slice(0, 17);
+
+    setVin(cleaned);
+  };
+
+  const upperVin = vin; // Уже очищено и в верхнем регистре
 
   const positions = [
     { pos: '1-3', title: 'WMI — Производитель и страна', desc: 'Первые 3 символа: код производителя (WMI). Например, J — Япония, X — Россия, 1/4/5 — США.', icon: <Globe size={32} /> },
@@ -14,6 +25,15 @@ export const VinInfo = () => {
     { pos: '12-17', title: 'Серийный номер', desc: 'Уникальный номер конкретного автомобиля.', icon: <Hash size={32} /> },
   ];
 
+  const getVinPart = (pos: string) => {
+    if (pos.includes('-')) {
+      const [start, end] = pos.split('-').map(Number);
+      return upperVin.slice(start - 1, end);
+    }
+    const num = Number(pos);
+    return upperVin[num - 1] || '-';
+  };
+
   return (
     <div style={{ maxWidth: 1200, margin: '0 auto', padding: 40 }}>
       <h2 style={{ fontSize: '48px', fontWeight: '900', textAlign: 'center', marginBottom: 32 }}>
@@ -23,13 +43,13 @@ export const VinInfo = () => {
         VIN — это уникальный 17-значный код автомобиля, как отпечаток пальца. Он содержит информацию о производителе, характеристиках и истории авто.
       </p>
 
-      {/* Интерактивный ввод VIN */}
+      {/* Интерактивный ввод VIN с ограничением */}
       <div style={{ marginBottom: 60, textAlign: 'center' }}>
         <p style={{ fontSize: '20px', marginBottom: 16 }}>Введите VIN для подсветки расшифровки:</p>
         <input
           type="text"
           value={vin}
-          onChange={e => setVin(e.target.value)}
+          onChange={e => handleVinChange(e.target.value)}
           placeholder="Например: XTA219000P1234567"
           style={{
             padding: '20px 24px',
@@ -46,8 +66,22 @@ export const VinInfo = () => {
           onFocus={e => e.target.style.borderColor = '#4f46e5'}
           onBlur={e => e.target.style.borderColor = '#e2e8f0'}
         />
+
+        {/* Счётчик и сообщение */}
+        <div style={{ marginTop: 16, fontSize: '18px', color: '#64748b' }}>
+          Введено: <strong>{upperVin.length}/17</strong> символов
+        </div>
+
         {upperVin.length === 17 && (
-          <p style={{ marginTop: 16, color: '#10b981', fontWeight: 'bold' }}>VIN полный — смотрите подсветку ниже!</p>
+          <p style={{ marginTop: 12, color: '#10b981', fontWeight: 'bold', fontSize: '20px' }}>
+            VIN полный — смотрите подсветку ниже!
+          </p>
+        )}
+
+        {upperVin.length > 0 && upperVin.length < 17 && (
+          <p style={{ marginTop: 12, color: '#ef4444', fontWeight: 'bold', fontSize: '18px' }}>
+            Введите все 17 символов для полной расшифровки
+          </p>
         )}
       </div>
 
@@ -63,6 +97,7 @@ export const VinInfo = () => {
               boxShadow: '0 15px 40px rgba(0,0,0,0.08)',
               textAlign: 'center',
               border: upperVin.length === 17 ? '4px solid #4f46e5' : 'none',
+              opacity: upperVin.length === 17 ? 1 : 0.7,
               transition: 'all 0.4s',
             }}
           >
@@ -71,9 +106,7 @@ export const VinInfo = () => {
             <p style={{ fontSize: '18px', color: '#475569', lineHeight: '1.6' }}>{p.desc}</p>
             {upperVin && (
               <div style={{ marginTop: 20, fontFamily: 'monospace', fontSize: '28px', letterSpacing: '4px', fontWeight: 'bold', color: '#1e293b' }}>
-                {p.pos.includes('-') 
-                  ? upperVin.slice(parseInt(p.pos[0])-1, parseInt(p.pos[2]))
-                  : upperVin[p.pos - 1] || '-'}
+                {getVinPart(p.pos)}
               </div>
             )}
           </div>
