@@ -1,9 +1,11 @@
-import { useState } from 'react';
+import { useState} from 'react';
 import { motion } from 'framer-motion';
 import { ValuationForm } from '@/features/valuation-by-vin/ui/ValuationForm';
 import { ParamsForm } from '@/features/valuation-by-params/ui/ParamsForm';
 import { VinInfo } from '@/features/vin-info/ui/VinInfo';
 import { Car, Zap, Shield, Target, TrendingUp } from 'lucide-react';
+
+
 
 export const HomePage = () => {
   const [tab, setTab] = useState<'vin' | 'params' | 'info'>('params');
@@ -22,11 +24,10 @@ export const HomePage = () => {
               <p style={{ fontSize: '17px', color: '#64748b', margin: 0 }}>Профессиональная рыночная оценка</p>
             </div>
           </div>
-          <p style={{ fontSize: '17px', color: '#64748b', fontWeight: '500' }}>Данные на декабрь 2025</p>
+          <p style={{ fontSize: '17px', color: '#64748b', fontWeight: '500' }}></p>
         </div>
       </header>
 
-      {/* ГЕРОЙ-СЕКЦИЯ */}
       <section style={{ padding: '100px 0' }}>
         <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 40px', textAlign: 'center' }}>
           <motion.h1
@@ -44,10 +45,10 @@ export const HomePage = () => {
             transition={{ delay: 0.3, duration: 0.8 }}
             style={{ fontSize: '26px', color: '#475569', lineHeight: '1.6', maxWidth: 900, margin: '0 auto 60px' }}
           >
-            Профессиональная оценка на основе анализа 500 000+ объявлений с Avito, Auto.ru и Drom
+            Профессиональная оценка на основе анализа 500 000+ объявлений с популярных площадок по продаже автомобилей
           </motion.p>
 
-          {/* ТАБЫ С ТРЕТЬЕЙ ВКЛАДКОЙ */}
+          {/* ТАБЫ */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -152,7 +153,7 @@ export const HomePage = () => {
               </div>
               <h3 style={{ fontSize: '30px', fontWeight: '700', marginBottom: 20 }}>Актуальные данные</h3>
               <p style={{ fontSize: '20px', color: '#64748b', lineHeight: '1.6' }}>
-                Обновление базы каждый день — самые свежие цены рынка РФ
+                Обновление базы — самые свежие цены рынка РФ
               </p>
             </motion.div>
 
@@ -225,7 +226,7 @@ export const HomePage = () => {
                 Откуда берутся данные?
               </summary>
               <p style={{ fontSize: '20px', color: '#475569', padding: '24px 0', lineHeight: '1.6' }}>
-                Из анализа реальных объявлений на Avito, Auto.ru и Drom. Мы учитываем регион, пробег, состояние, комплектацию и динамику рынка.
+                Из анализа реальных объявлений на площадках по продаже автомобилей. Мы учитываем регион, пробег, состояние, комплектацию и динамику рынка.
               </p>
             </details>
             <details style={{ marginBottom: 40 }}>
@@ -241,7 +242,7 @@ export const HomePage = () => {
                 Можно ли доверять оценке?
               </summary>
               <p style={{ fontSize: '20px', color: '#475569', padding: '24px 0', lineHeight: '1.6' }}>
-                Да. Модель учитывает 20+ параметров и показывает диапазон, в котором 90% автомобилей продаются в течение 30 дней.
+                Да. Модель учитывает 10+ параметров и показывает диапазон, в котором 90% автомобилей продаются в течение 30 дней.
               </p>
             </details>
           </div>
@@ -256,7 +257,7 @@ export const HomePage = () => {
             <h3 style={{ fontSize: '36px', fontWeight: '900', margin: 0 }}>Оценка Авто</h3>
           </div>
           <p style={{ fontSize: '20px', color: '#94a3b8', marginBottom: 40 }}>
-            Курсовой проект · Декабрь 2025 · Все данные основаны на анализе рынка РФ
+              Декабрь 2025 · Все данные основаны на анализе рынка РФ
           </p>
           <p style={{ fontSize: '18px', color: '#64748b' }}>
             Не является публичной офертой. Цены ориентировочные.

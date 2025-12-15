@@ -1,40 +1,37 @@
 import { useState } from 'react';
+import { Car, Gauge, Wrench, Fuel, Settings, AlertTriangle, Calendar, Globe, Package } from 'lucide-react';
 
 const brands = [
   'Toyota', 'Lada (ВАЗ)', 'Hyundai', 'Kia', 'Volkswagen', 'Renault',
-  'Nissan', 'Skoda', 'Ford', 'BMW', 'Mercedes-Benz', 'Audi', 'Chevrolet', 'Mitsubishi'
+  'Nissan', 'Skoda', 'Ford', 'BMW', 'Mercedes-Benz', 'Audi', 'Chevrolet', 'Mitsubishi',
+  'Citroën', 'Peugeot', 'Volvo', 'Mazda', 'Subaru', 'Honda', 'Suzuki', 'Chery', 'Geely', 'Haval'
 ];
 
 const modelsByBrand: Record<string, string[]> = {
-  'Toyota': ['Camry', 'RAV4', 'Corolla', 'Land Cruiser 200', 'Land Cruiser Prado', 'Hilux'],
-  'Lada (ВАЗ)': ['Vesta', 'Granta', 'Niva Legend', 'XRAY', 'Largus'],
-  'Hyundai': ['Solaris', 'Creta', 'Tucson', 'Santa Fe', 'Palisade'],
+  'Toyota': ['Camry', 'RAV4', 'Corolla', 'Land Cruiser', 'Prado', 'Hilux'],
+  'Lada (ВАЗ)': ['Vesta', 'Granta', 'Niva', 'XRAY', 'Largus'],
+  'Hyundai': ['Solaris', 'Creta', 'Tucson', 'Santa Fe'],
   'Kia': ['Rio', 'Sportage', 'Seltos', 'Sorento', 'K5'],
   'Volkswagen': ['Polo', 'Tiguan', 'Passat', 'Touareg'],
   'Renault': ['Logan', 'Duster', 'Kaptur', 'Arkana'],
-  'Nissan': ['Qashqai', 'X-Trail', 'Terrano', 'Almera'],
+  'Nissan': ['Qashqai', 'X-Trail', 'Almera'],
   'Skoda': ['Octavia', 'Kodiaq', 'Rapid', 'Karoq'],
-  'Ford': ['Focus', 'Kuga', 'Mondeo', 'Explorer'],
+  'Ford': ['Focus', 'Kuga', 'Explorer'],
   'BMW': ['3 Series', '5 Series', 'X3', 'X5'],
   'Mercedes-Benz': ['C-Class', 'E-Class', 'GLC', 'GLE'],
   'Audi': ['A4', 'A6', 'Q5', 'Q7'],
-  'Chevrolet': ['Niva', 'Cruze', 'Captiva'],
-  'Mitsubishi': ['Outlander', 'Pajero Sport', 'L200'],
+  'Citroën': ['C4', 'C5 Aircross', 'Berlingo'],
+  'Peugeot': ['308', '3008', '5008'],
+  // Добавь больше моделей
 };
 
-const bodyTypes = [
-  'Седан', 'Хэтчбек', 'Универсал', 'Внедорожник', 'Кроссовер', 'Минивэн', 'Купе', 'Пикап', 'Кабриолет'
-];
-
-const engineTypes = [
-  'Бензин', 'Дизель', 'Электро', 'Гибрид'
-];
-
-const transmissionTypes = [
-  'Механика', 'Автомат', 'Робот', 'Вариатор'
-];
-
+const bodyTypes = ['Седан', 'Хэтчбек', 'Универсал', 'Внедорожник', 'Кроссовер', 'Минивэн', 'Купе', 'Пикап'];
+const engineTypes = ['Бензин', 'Дизель', 'Электро', 'Гибрид'];
+const transmissionTypes = ['Механика', 'Автомат', 'Робот', 'Вариатор'];
 const doorCounts = ['2', '3', '4', '5'];
+const regions = ['Москва', 'СПб', 'Регионы России']; // Новая характеристика
+const conditions = ['Отличное', 'Хорошее', 'Среднее']; // Новая
+const complectations = ['Базовая', 'Средняя', 'Премиум']; // Новая
 
 export const ParamsForm = () => {
   const [brand, setBrand] = useState('');
@@ -45,212 +42,424 @@ export const ParamsForm = () => {
   const [engine, setEngine] = useState('');
   const [transmission, setTransmission] = useState('');
   const [doors, setDoors] = useState('');
+  const [region, setRegion] = useState(''); // Новое
+  const [condition, setCondition] = useState(''); // Новое
+  const [complectation, setComplectation] = useState(''); // Новое
   const [accident, setAccident] = useState(false);
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<any>(null);
+  const [error, setError] = useState('');
+
+  // Прогресс заполнения (расширен на 11 полей)
+  const filled = [brand, model, year, mileage, bodyType, engine, transmission, doors, region, condition, complectation].filter(Boolean).length;
+  const progress = (filled / 11) * 100;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
+    setError('');
     setResult(null);
 
-    await new Promise(r => setTimeout(r, 1200));
+    if (filled < 11) {
+      setError('Заполните все обязательные поля для точной оценки');
+      return;
+    }
 
-    const priceMap: Record<string, number> = {
-      'Toyota Camry': 3200000,
-      'Toyota RAV4': 3400000,
-      'Lada Vesta': 1300000,
-      'Lada Granta': 850000,
-      'Hyundai Solaris': 1950000,
-      'Hyundai Creta': 2400000,
-      'Kia Rio': 2000000,
-      'Volkswagen Polo': 2100000,
-      'Renault Duster': 1800000,
-      'Skoda Octavia': 2600000,
-      'BMW 5 Series': 5200000,
-      'Mercedes-Benz E-Class': 5800000,
-    };
+    setLoading(true);
 
-    const key = `${brand} ${model}`;
-    let basePrice = priceMap[key] || 2200000;
+    try {
+      const response = await fetch('http://localhost:5000/api/valuation/params', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          brand,
+          model,
+          year: Number(year),
+          mileage: Number(mileage),
+          bodyType,
+          engine,
+          transmission,
+          doors,
+          region,
+          condition,
+          complectation,
+          accident,
+        }),
+      });
 
-    const age = 2025 - Number(year || 2025);
-    basePrice *= (1 - age * 0.1); // Больше возраст - больше снижение (10% в год)
+      if (!response.ok) {
+        const errData = await response.json();
+        throw new Error(errData.error || 'Ошибка сервера');
+      }
 
-    const km = Number(mileage) || 0;
-    basePrice *= (1 - km / 150000); // Больше пробег - больше снижение (полное обесценивание за 150к км)
-
-    // Корректировка по ДТП
-    if (accident) basePrice *= 0.75; // -25% если в ДТП
-
-    // Корректировка по кузову
-    const bodyAdjustment: Record<string, number> = {
-      'Седан': 1.0,
-      'Хэтчбек': 0.95,
-      'Универсал': 0.98,
-      'Внедорожник': 1.15,
-      'Кроссовер': 1.10,
-      'Минивэн': 1.05,
-      'Купе': 1.05,
-      'Пикап': 1.1,
-      'Кабриолет': 1.08,
-    };
-    basePrice *= bodyAdjustment[bodyType] || 1.0;
-
-    // Корректировка по двигателю
-    const engineAdjustment: Record<string, number> = {
-      'Бензин': 1.0,
-      'Дизель': 1.05,
-      'Электро': 1.2,
-      'Гибрид': 1.15,
-    };
-    basePrice *= engineAdjustment[engine] || 1.0;
-
-    // Корректировка по коробке
-    const transmissionAdjustment: Record<string, number> = {
-      'Механика': 0.95,
-      'Автомат': 1.1,
-      'Робот': 1.0,
-      'Вариатор': 1.05,
-    };
-    basePrice *= transmissionAdjustment[transmission] || 1.0;
-
-    // Корректировка по дверям
-    const doorsAdjustment: Record<string, number> = {
-      '2': 0.95,
-      '3': 0.98,
-      '4': 1.05,
-      '5': 1.1,
-    };
-    basePrice *= doorsAdjustment[doors] || 1.0;
-
-    const priceAvg = Math.max(300000, Math.round(basePrice));
-    const priceMin = Math.round(priceAvg * 0.85);
-    const priceMax = Math.round(priceAvg * 1.15);
-
-    setResult({
-      brand,
-      model,
-      year,
-      mileage: Number(mileage).toLocaleString('ru'),
-      bodyType,
-      engine,
-      transmission,
-      doors,
-      accident: accident ? 'Да' : 'Нет',
-      priceMin,
-      priceAvg,
-      priceMax,
-    });
-
-    setLoading(false);
+      const data = await response.json();
+      setResult(data);
+      
+    } catch (err: any) {
+      setError(err.message || 'Не удалось связаться с сервером');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div style={{ maxWidth: 700, margin: '0 auto', padding: '40px 20px' }}>
-      <h2 style={{ marginBottom: 32, fontSize: '2rem', textAlign: 'center' }}>
+    <div style={{ maxWidth: 800, margin: '0 auto', padding: '40px 20px' }}>
+      <h2 style={{ fontSize: '2.4rem', fontWeight: '900', textAlign: 'center', marginBottom: 32, color: '#1e293b' }}>
         Оценка по характеристикам
       </h2>
 
+      {/* Прогресс-бар */}
+      <div style={{ marginBottom: 40 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 12 }}>
+          <span style={{ fontSize: '1.1rem', color: '#64748b' }}>Заполнено полей</span>
+          <span style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#1e293b' }}>{filled}/11</span>
+        </div>
+        <div style={{ height: 14, background: '#e2e8f0', borderRadius: 8, overflow: 'hidden' }}>
+          <div
+            style={{
+              width: `${progress}%`,
+              height: '100%',
+              background: 'linear-gradient(90deg, #4f46e5, #7c3aed)',
+              borderRadius: 8,
+              transition: 'width 0.5s ease',
+            }}
+          />
+        </div>
+      </div>
+
       <form onSubmit={handleSubmit}>
-        <div style={{ display: 'grid', gap: 20, gridTemplateColumns: '1fr 1fr', marginBottom: 24 }}>
-          <select value={brand} onChange={e => { setBrand(e.target.value); setModel(''); }} required
-            style={{ padding: 16, fontSize: '1.1rem', borderRadius: 12, border: '2px solid #ddd' }}>
-            <option value="">Марка</option>
-            {brands.map(b => <option key={b}>{b}</option>)}
-          </select>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24, marginBottom: 32 }}>
+          {/* Марка */}
+          <div style={{ position: 'relative' }}>
+            <Car style={{ position: 'absolute', left: 16, top: 20, color: '#64748b' }} size={28} />
+            <select
+              value={brand}
+              onChange={(e) => { setBrand(e.target.value); setModel(''); }}
+              required
+              style={{
+                padding: '20px 20px 20px 60px',
+                fontSize: '1.2rem',
+                borderRadius: 16,
+                border: '3px solid #e2e8f0',
+                width: '100%',
+                transition: 'border 0.3s',
+              }}
+              onFocus={(e) => (e.target.style.borderColor = '#4f46e5')}
+              onBlur={(e) => (e.target.style.borderColor = '#e2e8f0')}
+            >
+              <option value="">Марка автомобиля</option>
+              {brands.map((b) => <option key={b}>{b}</option>)}
+            </select>
+          </div>
 
-          <select value={model} onChange={e => setModel(e.target.value)} required disabled={!brand}
-            style={{ padding: 16, fontSize: '1.1rem', borderRadius: 12, border: '2px solid #ddd' }}>
-            <option value="">Модель</option>
-            {(modelsByBrand[brand] || []).map(m => <option key={m}>{m}</option>)}
-          </select>
+          {/* Модель */}
+          <div style={{ position: 'relative' }}>
+            <Wrench style={{ position: 'absolute', left: 16, top: 20, color: '#64748b' }} size={28} />
+            <select
+              value={model}
+              onChange={(e) => setModel(e.target.value)}
+              required
+              disabled={!brand}
+              style={{
+                padding: '20px 20px 20px 60px',
+                fontSize: '1.2rem',
+                borderRadius: 16,
+                border: '3px solid #e2e8f0',
+                width: '100%',
+                transition: 'border 0.3s',
+              }}
+              onFocus={(e) => (e.target.style.borderColor = '#4f46e5')}
+              onBlur={(e) => (e.target.style.borderColor = '#e2e8f0')}
+            >
+              <option value="">Модель</option>
+              {(modelsByBrand[brand] || []).map((m) => <option key={m}>{m}</option>)}
+            </select>
+          </div>
 
-          <input type="number" min="2000" max="2025" placeholder="Год выпуска" value={year} onChange={e => setYear(e.target.value)} required
-            style={{ padding: 16, fontSize: '1.1rem', borderRadius: 12, border: '2px solid #ddd' }} />
+          {/* Год */}
+          <div style={{ position: 'relative' }}>
+            <Calendar style={{ position: 'absolute', left: 16, top: 20, color: '#64748b' }} size={28} />
+            <input
+              type="number"
+              min="1980"
+              max="2025"
+              placeholder="Год выпуска"
+              value={year}
+              onChange={(e) => setYear(e.target.value)}
+              required
+              style={{
+                padding: '20px 20px 20px 60px',
+                fontSize: '1.2rem',
+                borderRadius: 16,
+                border: '3px solid #e2e8f0',
+                width: '100%',
+              }}
+              onFocus={(e) => (e.target.style.borderColor = '#4f46e5')}
+              onBlur={(e) => (e.target.style.borderColor = '#e2e8f0')}
+            />
+          </div>
 
-          <input type="number" min="0" placeholder="Пробег, км" value={mileage} onChange={e => setMileage(e.target.value)} required
-            style={{ padding: 16, fontSize: '1.1rem', borderRadius: 12, border: '2px solid #ddd' }} />
+          {/* Пробег */}
+          <div style={{ position: 'relative' }}>
+            <Gauge style={{ position: 'absolute', left: 16, top: 20, color: '#64748b' }} size={28} />
+            <input
+              type="number"
+              min="0"
+              placeholder="Пробег, км"
+              value={mileage}
+              onChange={(e) => setMileage(e.target.value)}
+              required
+              style={{
+                padding: '20px 20px 20px 60px',
+                fontSize: '1.2rem',
+                borderRadius: 16,
+                border: '3px solid #e2e8f0',
+                width: '100%',
+              }}
+              onFocus={(e) => (e.target.style.borderColor = '#4f46e5')}
+              onBlur={(e) => (e.target.style.borderColor = '#e2e8f0')}
+            />
+          </div>
 
-          <select value={bodyType} onChange={e => setBodyType(e.target.value)} required
-            style={{ padding: 16, fontSize: '1.1rem', borderRadius: 12, border: '2px solid #ddd' }}>
-            <option value="">Тип кузова</option>
-            {bodyTypes.map(t => <option key={t}>{t}</option>)}
-          </select>
+          {/* Тип кузова */}
+          <div style={{ position: 'relative' }}>
+            <Car style={{ position: 'absolute', left: 16, top: 20, color: '#64748b' }} size={28} />
+            <select
+              value={bodyType}
+              onChange={(e) => setBodyType(e.target.value)}
+              required
+              style={{
+                padding: '20px 20px 20px 60px',
+                fontSize: '1.2rem',
+                borderRadius: 16,
+                border: '3px solid #e2e8f0',
+                width: '100%',
+              }}
+              onFocus={(e) => (e.target.style.borderColor = '#4f46e5')}
+              onBlur={(e) => (e.target.style.borderColor = '#e2e8f0')}
+            >
+              <option value="">Тип кузова</option>
+              {bodyTypes.map((t) => <option key={t}>{t}</option>)}
+            </select>
+          </div>
 
-          <select value={engine} onChange={e => setEngine(e.target.value)} required
-            style={{ padding: 16, fontSize: '1.1rem', borderRadius: 12, border: '2px solid #ddd' }}>
-            <option value="">Двигатель</option>
-            {engineTypes.map(e => <option key={e}>{e}</option>)}
-          </select>
+          {/* Двигатель */}
+          <div style={{ position: 'relative' }}>
+            <Fuel style={{ position: 'absolute', left: 16, top: 20, color: '#64748b' }} size={28} />
+            <select
+              value={engine}
+              onChange={(e) => setEngine(e.target.value)}
+              required
+              style={{
+                padding: '20px 20px 20px 60px',
+                fontSize: '1.2rem',
+                borderRadius: 16,
+                border: '3px solid #e2e8f0',
+                width: '100%',
+              }}
+              onFocus={(e) => (e.target.style.borderColor = '#4f46e5')}
+              onBlur={(e) => (e.target.style.borderColor = '#e2e8f0')}
+            >
+              <option value="">Двигатель</option>
+              {engineTypes.map((e) => <option key={e}>{e}</option>)}
+            </select>
+          </div>
 
-          <select value={transmission} onChange={e => setTransmission(e.target.value)} required
-            style={{ padding: 16, fontSize: '1.1rem', borderRadius: 12, border: '2px solid #ddd' }}>
-            <option value="">Коробка передач</option>
-            {transmissionTypes.map(t => <option key={t}>{t}</option>)}
-          </select>
+          {/* Коробка */}
+          <div style={{ position: 'relative' }}>
+            <Settings style={{ position: 'absolute', left: 16, top: 20, color: '#64748b' }} size={28} />
+            <select
+              value={transmission}
+              onChange={(e) => setTransmission(e.target.value)}
+              required
+              style={{
+                padding: '20px 20px 20px 60px',
+                fontSize: '1.2rem',
+                borderRadius: 16,
+                border: '3px solid #e2e8f0',
+                width: '100%',
+              }}
+              onFocus={(e) => (e.target.style.borderColor = '#4f46e5')}
+              onBlur={(e) => (e.target.style.borderColor = '#e2e8f0')}
+            >
+              <option value="">Коробка передач</option>
+              {transmissionTypes.map((t) => <option key={t}>{t}</option>)}
+            </select>
+          </div>
 
-          <select value={doors} onChange={e => setDoors(e.target.value)} required
-            style={{ padding: 16, fontSize: '1.1rem', borderRadius: 12, border: '2px solid #ddd' }}>
-            <option value="">Количество дверей</option>
-            {doorCounts.map(d => <option key={d}>{d}</option>)}
-          </select>
+          {/* Двери */}
+          <div style={{ position: 'relative' }}>
+            <Car style={{ position: 'absolute', left: 16, top: 20, color: '#64748b' }} size={28} />
+            <select
+              value={doors}
+              onChange={(e) => setDoors(e.target.value)}
+              required
+              style={{
+                padding: '20px 20px 20px 60px',
+                fontSize: '1.2rem',
+                borderRadius: 16,
+                border: '3px solid #e2e8f0',
+                width: '100%',
+              }}
+              onFocus={(e) => (e.target.style.borderColor = '#4f46e5')}
+              onBlur={(e) => (e.target.style.borderColor = '#e2e8f0')}
+            >
+              <option value="">Количество дверей</option>
+              {doorCounts.map((d) => <option key={d}>{d}</option>)}
+            </select>
+          </div>
+
+          {/* Регион */}
+          <div style={{ position: 'relative' }}>
+            <Globe style={{ position: 'absolute', left: 16, top: 20, color: '#64748b' }} size={28} />
+            <select
+              value={region}
+              onChange={(e) => setRegion(e.target.value)}
+              required
+              style={{
+                padding: '20px 20px 20px 60px',
+                fontSize: '1.2rem',
+                borderRadius: 16,
+                border: '3px solid #e2e8f0',
+                width: '100%',
+              }}
+              onFocus={(e) => (e.target.style.borderColor = '#4f46e5')}
+              onBlur={(e) => (e.target.style.borderColor = '#e2e8f0')}
+            >
+              <option value="">Регион</option>
+              {regions.map((r) => <option key={r}>{r}</option>)}
+            </select>
+          </div>
+
+          {/* Состояние */}
+          <div style={{ position: 'relative' }}>
+            <Wrench style={{ position: 'absolute', left: 16, top: 20, color: '#64748b' }} size={28} />
+            <select
+              value={condition}
+              onChange={(e) => setCondition(e.target.value)}
+              required
+              style={{
+                padding: '20px 20px 20px 60px',
+                fontSize: '1.2rem',
+                borderRadius: 16,
+                border: '3px solid #e2e8f0',
+                width: '100%',
+              }}
+              onFocus={(e) => (e.target.style.borderColor = '#4f46e5')}
+              onBlur={(e) => (e.target.style.borderColor = '#e2e8f0')}
+            >
+              <option value="">Состояние</option>
+              {conditions.map((c) => <option key={c}>{c}</option>)}
+            </select>
+          </div>
+
+          {/* Комплектация */}
+          <div style={{ position: 'relative' }}>
+            <Package style={{ position: 'absolute', left: 16, top: 20, color: '#64748b' }} size={28} />
+            <select
+              value={complectation}
+              onChange={(e) => setComplectation(e.target.value)}
+              required
+              style={{
+                padding: '20px 20px 20px 60px',
+                fontSize: '1.2rem',
+                borderRadius: 16,
+                border: '3px solid #e2e8f0',
+                width: '100%',
+              }}
+              onFocus={(e) => (e.target.style.borderColor = '#4f46e5')}
+              onBlur={(e) => (e.target.style.borderColor = '#e2e8f0')}
+            >
+              <option value="">Комплектация</option>
+              {complectations.map((c) => <option key={c}>{c}</option>)}
+            </select>
+          </div>
         </div>
 
-        <label style={{ display: 'block', marginBottom: 24, fontSize: '1.1rem' }}>
-          <input type="checkbox" checked={accident} onChange={e => setAccident(e.target.checked)} />
-          Было в ДТП
+        {/* ДТП */}
+        <label style={{ display: 'flex', alignItems: 'center', gap: 16, fontSize: '1.2rem', marginBottom: 40, cursor: 'pointer' }}>
+          <AlertTriangle size={32} color={accident ? '#ef4444' : '#64748b'} />
+          <span>Автомобиль был в ДТП</span>
+          <input
+            type="checkbox"
+            checked={accident}
+            onChange={(e) => setAccident(e.target.checked)}
+            style={{ width: 28, height: 28, accentColor: '#ef4444' }}
+          />
         </label>
 
-        <button type="submit" disabled={loading || !model || !year || !bodyType || !engine || !transmission || !doors}
+        {/* Ошибка */}
+        {error && (
+          <div style={{
+            padding: 20,
+            background: '#fee2e2',
+            border: '2px solid #fca5a5',
+            borderRadius: 16,
+            color: '#991b1b',
+            textAlign: 'center',
+            marginBottom: 24,
+          }}>
+            {error}
+          </div>
+        )}
+
+        {/* Кнопка */}
+        <button
+          type="submit"
+          disabled={loading || filled < 11}
           style={{
             width: '100%',
-            padding: 18,
-            fontSize: '1.3rem',
-            background: (!model || !year || !bodyType || !engine || !transmission || !doors) ? '#ccc' : '#1976d2',
+            padding: '24px',
+            fontSize: '1.6rem',
+            fontWeight: 'bold',
+            background: filled === 11 && !loading ? 'linear-gradient(135deg, #4f46e5, #7c3aed)' : '#e2e8f0',
             color: 'white',
             border: 'none',
-            borderRadius: 16,
-            cursor: (!model || !year || !bodyType || !engine || !transmission || !doors) ? 'not-allowed' : 'pointer',
-          }}>
+            borderRadius: 20,
+            cursor: filled === 11 && !loading ? 'pointer' : 'not-allowed',
+            boxShadow: filled === 11 ? '0 20px 50px rgba(79,70,229,0.4)' : 'none',
+            transition: 'all 0.4s',
+          }}
+        >
           {loading ? 'Оцениваем...' : 'Оценить стоимость'}
         </button>
       </form>
 
+      {/* Результат */}
       {result && (
-        <div style={{
-          marginTop: 40,
-          padding: 32,
-          background: 'linear-gradient(135deg, #e8f5e8 0%, #f8fff8 100%)',
-          border: '2px solid #4caf50',
-          borderRadius: 20,
-          textAlign: 'center',
-        }}>
-          <h3 style={{ color: '#2e7d32', fontSize: '2rem' }}>Оценка готова!</h3>
-          <p style={{ fontSize: '1.5rem', margin: '16px 0' }}>
-            <strong>{result.brand} {result.model} {result.year} г.</strong>
-          </p>
-          <p style={{ color: '#666' }}>Пробег: {result.mileage} км</p>
-          <p style={{ color: '#666' }}>Тип кузова: {result.bodyType}</p>
-          <p style={{ color: '#666' }}>Двигатель: {result.engine}</p>
-          <p style={{ color: '#666' }}>Коробка: {result.transmission}</p>
-          <p style={{ color: '#666' }}>Двери: {result.doors}</p>
-          <p style={{ color: '#666' }}>В ДТП: {result.accident}</p>
+        <div
+          style={{
+            marginTop: 60,
+            padding: 48,
+            background: 'linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%)',
+            border: '4px solid #22c55e',
+            borderRadius: 32,
+            textAlign: 'center',
+            boxShadow: '0 30px 80px rgba(34,197,94,0.2)',
+          }}
+        >
+          <Car size={80} style={{ color: '#16a34a', marginBottom: 32 }} />
+          <h3 style={{ fontSize: '2.8rem', color: '#166534', marginBottom: 32 }}>
+            Оценка готова!
+          </h3>
 
-          <div style={{ fontSize: '3.5rem', fontWeight: 900, color: '#2e7d32', margin: '20px 0' }}>
-            {result.priceAvg < 1000000 ? 
-              (result.priceAvg / 1000).toFixed(0) + ' тыс ₽' :
-              (result.priceAvg / 1000000).toFixed(2) + ' млн ₽'
-            }
+          <p style={{ fontSize: '2rem', fontWeight: 'bold', color: '#166534', marginBottom: 24 }}>
+            {result.brand} {result.model} • {result.year} г.
+          </p>
+
+          <p style={{ fontSize: '1.4rem', color: '#4b5563', marginBottom: 40 }}>
+            Пробег: {Number(result.mileage).toLocaleString('ru-RU')} км • ДТП: {result.accident ? 'Да' : 'Нет'}
+          </p>
+
+          <div style={{ fontSize: '5rem', fontWeight: 900, color: '#16a34a', margin: '40px 0' }}>
+            {(result.price.avg / 1000000).toFixed(2)} млн ₽
           </div>
-          <p style={{ color: '#555' }}>
-            Диапазон: от {result.priceMin < 1000000 ? 
-              (result.priceMin / 1000).toFixed(0) + ' тыс' : 
-              (result.priceMin / 1000000).toFixed(2) + ' млн'
-            } до {result.priceMax < 1000000 ? 
-              (result.priceMax / 1000).toFixed(0) + ' тыс' : 
-              (result.priceMax / 1000000).toFixed(2) + ' млн'
-            } ₽
+
+          <p style={{ fontSize: '1.6rem', color: '#374151' }}>
+            Рыночный диапазон: от {(result.price.min / 1000000).toFixed(2)} до {(result.price.max / 1000000).toFixed(2)} млн ₽
+          </p>
+
+          <p style={{ fontSize: '1rem', color: '#6b7280', marginTop: 40 }}>
+            {result.source}
           </p>
         </div>
       )}

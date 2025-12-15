@@ -36,6 +36,7 @@ export const ValuationForm = () => {
       } else {
         const data = await response.json();
         setResult(data);
+        
       }
     } catch (err: any) {
       setError(err.message || 'Не удалось связаться с сервером');
