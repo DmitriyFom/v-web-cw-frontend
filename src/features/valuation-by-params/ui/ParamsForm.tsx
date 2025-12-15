@@ -22,16 +22,15 @@ const modelsByBrand: Record<string, string[]> = {
   'Audi': ['A4', 'A6', 'Q5', 'Q7'],
   'Citroën': ['C4', 'C5 Aircross', 'Berlingo'],
   'Peugeot': ['308', '3008', '5008'],
-  // Добавь больше моделей
 };
 
 const bodyTypes = ['Седан', 'Хэтчбек', 'Универсал', 'Внедорожник', 'Кроссовер', 'Минивэн', 'Купе', 'Пикап'];
 const engineTypes = ['Бензин', 'Дизель', 'Электро', 'Гибрид'];
 const transmissionTypes = ['Механика', 'Автомат', 'Робот', 'Вариатор'];
 const doorCounts = ['2', '3', '4', '5'];
-const regions = ['Москва', 'СПб', 'Регионы России']; // Новая характеристика
-const conditions = ['Отличное', 'Хорошее', 'Среднее']; // Новая
-const complectations = ['Базовая', 'Средняя', 'Премиум']; // Новая
+const regions = ['Москва', 'СПб', 'Регионы России']; 
+const conditions = ['Отличное', 'Хорошее', 'Среднее']; 
+const complectations = ['Базовая', 'Средняя', 'Премиум']; 
 
 export const ParamsForm = () => {
   const [brand, setBrand] = useState('');
@@ -42,15 +41,14 @@ export const ParamsForm = () => {
   const [engine, setEngine] = useState('');
   const [transmission, setTransmission] = useState('');
   const [doors, setDoors] = useState('');
-  const [region, setRegion] = useState(''); // Новое
-  const [condition, setCondition] = useState(''); // Новое
-  const [complectation, setComplectation] = useState(''); // Новое
+  const [region, setRegion] = useState(''); 
+  const [condition, setCondition] = useState(''); 
+  const [complectation, setComplectation] = useState(''); 
   const [accident, setAccident] = useState(false);
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<any>(null);
   const [error, setError] = useState('');
 
-  // Прогресс заполнения (расширен на 11 полей)
   const filled = [brand, model, year, mileage, bodyType, engine, transmission, doors, region, condition, complectation].filter(Boolean).length;
   const progress = (filled / 11) * 100;
 
@@ -93,7 +91,6 @@ export const ParamsForm = () => {
 
       const data = await response.json();
       setResult(data);
-      
     } catch (err: any) {
       setError(err.message || 'Не удалось связаться с сервером');
     } finally {
