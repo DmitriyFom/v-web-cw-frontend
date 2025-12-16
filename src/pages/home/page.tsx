@@ -1,4 +1,4 @@
-import { useState} from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { ValuationForm } from '@/features/valuation-by-vin/ui/ValuationForm';
 import { ParamsForm } from '@/features/valuation-by-params/ui/ParamsForm';
@@ -9,100 +9,63 @@ export const HomePage = () => {
   const [tab, setTab] = useState<'vin' | 'params' | 'info'>('params');
 
   return (
-    <div style={{ minHeight: '100vh', background: '#f8fafc', fontFamily: 'system-ui, -apple-system, sans-serif' }}>
-   
-      <header style={{ background: 'white', boxShadow: '0 4px 20px rgba(0,0,0,0.05)', padding: '24px 0' }}>
-        <div style={{ maxWidth: 1400, margin: '0 auto', padding: '0 40px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
-            <div style={{ width: 64, height: 64, background: 'linear-gradient(135deg, #6366f1, #8b5cf6)', borderRadius: 20, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <Car size={36} color="white" />
+    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
+      <header className="bg-white shadow-md py-6 sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
+          <div className="flex items-center gap-5">
+            <div className="w-16 h-16 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg">
+              <Car className="w-10 h-10 text-white" />
             </div>
             <div>
-              <h1 style={{ fontSize: '34px', fontWeight: '900', margin: 0, color: '#1e293b' }}>AutoPrice</h1>
-              <p style={{ fontSize: '17px', color: '#64748b', margin: 0 }}>Профессиональная рыночная оценка</p>
+              <h1 className="text-4xl font-black text-slate-900">AutoPrice</h1>
+              <p className="text-lg text-slate-600">Профессиональная рыночная оценка</p>
             </div>
           </div>
-          <p style={{ fontSize: '17px', color: '#64748b', fontWeight: '500' }}></p>
         </div>
       </header>
-
-      <section style={{ padding: '100px 0' }}>
-        <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 40px', textAlign: 'center' }}>
+      <section className="py-20 px-6">
+        <div className="max-w-5xl mx-auto text-center">
           <motion.h1
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            style={{ fontSize: '64px', fontWeight: '900', lineHeight: '1.1', color: '#1e293b', marginBottom: 24 }}
+            transition={{ duration: 0.9 }}
+            className="text-5xl md:text-6xl lg:text-7xl font-black text-slate-900 leading-tight mb-8"
           >
-            Узнайте реальную цену<br />автомобиля за 3 секунды
+            Узнайте реальную цену<br />
+            автомобиля за 3 секунды
           </motion.h1>
 
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.3, duration: 0.8 }}
-            style={{ fontSize: '26px', color: '#475569', lineHeight: '1.6', maxWidth: 900, margin: '0 auto 60px' }}
+            transition={{ delay: 0.4, duration: 0.8 }}
+            className="text-xl md:text-2xl text-slate-600 max-w-3xl mx-auto mb-16 leading-relaxed"
           >
-            Профессиональная оценка на основе анализа 500 000+ объявлений с популярных площадок по продаже автомобилей
+            Профессиональная оценка на основе анализа 500 000+ объявлений<br />
+            с популярных площадок по продаже автомобилей
           </motion.p>
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6 }}
-            style={{ display: 'flex', justifyContent: 'center', gap: 24, marginBottom: 60, flexWrap: 'wrap' }}
+            className="flex flex-wrap justify-center gap-6 mb-16"
           >
-            <button
-              onClick={() => setTab('vin')}
-              style={{
-                padding: '20px 48px',
-                fontSize: '22px',
-                fontWeight: '700',
-                background: tab === 'vin' ? 'linear-gradient(135deg, #6366f1, #8b5cf6)' : '#e2e8f0',
-                color: tab === 'vin' ? 'white' : '#1e293b',
-                border: 'none',
-                borderRadius: 20,
-                cursor: 'pointer',
-                boxShadow: tab === 'vin' ? '0 15px 40px rgba(99,102,241,0.4)' : '0 4px 15px rgba(0,0,0,0.05)',
-                transition: 'all 0.4s',
-              }}
-            >
-              По VIN-коду
-            </button>
-            <button
-              onClick={() => setTab('params')}
-              style={{
-                padding: '20px 48px',
-                fontSize: '22px',
-                fontWeight: '700',
-                background: tab === 'params' ? 'linear-gradient(135deg, #6366f1, #8b5cf6)' : '#e2e8f0',
-                color: tab === 'params' ? 'white' : '#1e293b',
-                border: 'none',
-                borderRadius: 20,
-                cursor: 'pointer',
-                boxShadow: tab === 'params' ? '0 15px 40px rgba(99,102,241,0.4)' : '0 4px 15px rgba(0,0,0,0.05)',
-                transition: 'all 0.4s',
-              }}
-            >
-              По характеристикам
-            </button>
-            <button
-              onClick={() => setTab('info')}
-              style={{
-                padding: '20px 48px',
-                fontSize: '22px',
-                fontWeight: '700',
-                background: tab === 'info' ? 'linear-gradient(135deg, #6366f1, #8b5cf6)' : '#e2e8f0',
-                color: tab === 'info' ? 'white' : '#1e293b',
-                border: 'none',
-                borderRadius: 20,
-                cursor: 'pointer',
-                boxShadow: tab === 'info' ? '0 15px 40px rgba(99,102,241,0.4)' : '0 4px 15px rgba(0,0,0,0.05)',
-                transition: 'all 0.4s',
-              }}
-            >
-              Что такое VIN?
-            </button>
+            {(['vin', 'params', 'info'] as const).map((t) => (
+              <button
+                key={t}
+                onClick={() => setTab(t)}
+                className={`px-10 py-5 text-xl font-bold rounded-2xl transition-all shadow-md hover:shadow-xl ${
+                  tab === t
+                    ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-purple-500/40'
+                    : 'bg-white text-slate-800 border border-slate-300'
+                }`}
+              >
+                {t === 'vin' && 'По VIN-коду'}
+                {t === 'params' && 'По характеристикам'}
+                {t === 'info' && 'Что такое VIN?'}
+              </button>
+            ))}
           </motion.div>
 
           <motion.div
@@ -110,14 +73,7 @@ export const HomePage = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            style={{
-              background: 'white',
-              borderRadius: 40,
-              padding: tab === 'info' ? 0 : 60,
-              boxShadow: '0 30px 80px rgba(0,0,0,0.12)',
-              maxWidth: tab === 'info' ? 'none' : 900,
-              margin: '0 auto',
-            }}
+            className="bg-white rounded-3xl shadow-2xl p-8 md:p-16 max-w-4xl mx-auto"
           >
             {tab === 'vin' && <ValuationForm />}
             {tab === 'params' && <ParamsForm />}
@@ -126,132 +82,52 @@ export const HomePage = () => {
         </div>
       </section>
 
-      <section style={{ padding: '120px 0', background: '#ffffff' }}>
-        <div style={{ maxWidth: 1400, margin: '0 auto', padding: '0 40px' }}>
-          <h2 style={{ fontSize: '52px', fontWeight: '900', textAlign: 'center', color: '#1e293b', marginBottom: 100 }}>
+      <section className="py-28 bg-gradient-to-b from-white to-slate-50">
+        <div className="max-w-7xl mx-auto px-6">
+          <h2 className="text-5xl md:text-6xl font-black text-center text-slate-900 mb-20">
             Почему выбирают нас
           </h2>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 48 }}>
-            <motion.div whileHover={{ y: -10 }} style={{ textAlign: 'center' }}>
-              <div style={{ width: 140, height: 140, background: 'linear-gradient(135deg, #c084fc, #a78bfa)', borderRadius: '50%', margin: '0 auto 36px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <Target size={70} color="white" />
-              </div>
-              <h3 style={{ fontSize: '30px', fontWeight: '700', marginBottom: 20 }}>Максимальная точность</h3>
-              <p style={{ fontSize: '20px', color: '#64748b', lineHeight: '1.6' }}>
-                Анализ реальных сделок и объявлений с учётом региона, состояния и комплектации
-              </p>
-            </motion.div>
-
-            <motion.div whileHover={{ y: -10 }} style={{ textAlign: 'center' }}>
-              <div style={{ width: 140, height: 140, background: 'linear-gradient(135deg, #60a5fa, #3b82f6)', borderRadius: '50%', margin: '0 auto 36px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <TrendingUp size={70} color="white" />
-              </div>
-              <h3 style={{ fontSize: '30px', fontWeight: '700', marginBottom: 20 }}>Актуальные данные</h3>
-              <p style={{ fontSize: '20px', color: '#64748b', lineHeight: '1.6' }}>
-                Обновление базы — самые свежие цены рынка РФ
-              </p>
-            </motion.div>
-
-            <motion.div whileHover={{ y: -10 }} style={{ textAlign: 'center' }}>
-              <div style={{ width: 140, height: 140, background: 'linear-gradient(135deg, #34d399, #10b981)', borderRadius: '50%', margin: '0 auto 36px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <Zap size={70} color="white" />
-              </div>
-              <h3 style={{ fontSize: '30px', fontWeight: '700', marginBottom: 20 }}>Мгновенный результат</h3>
-              <p style={{ fontSize: '20px', color: '#64748b', lineHeight: '1.6' }}>
-                Оценка за 3 секунды — быстрее, чем на любом другом сервисе
-              </p>
-            </motion.div>
-
-            <motion.div whileHover={{ y: -10 }} style={{ textAlign: 'center' }}>
-              <div style={{ width: 140, height: 140, background: 'linear-gradient(135deg, #fbbf24, #f59e0b)', borderRadius: '50%', margin: '0 auto 36px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <Shield size={70} color="white" />
-              </div>
-              <h3 style={{ fontSize: '30px', fontWeight: '700', marginBottom: 20 }}>Полностью бесплатно</h3>
-              <p style={{ fontSize: '20px', color: '#64748b', lineHeight: '1.6' }}>
-                Без регистрации, SMS и скрытых платежей
-              </p>
-            </motion.div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
+            {[
+              { icon: Target, title: 'Максимальная точность', desc: 'Анализ реальных сделок и объявлений с учётом региона, состояния и комплектации' },
+              { icon: TrendingUp, title: 'Актуальные данные', desc: 'Обновление базы — самые свежие цены рынка РФ' },
+              { icon: Zap, title: 'Мгновенный результат', desc: 'Оценка за 3 секунды — быстрее, чем на любом другом сервисе' },
+              { icon: Shield, title: 'Полностью бесплатно', desc: 'Без регистрации, SMS и скрытых платежей' },
+            ].map((item, i) => (
+              <motion.div
+                key={i}
+                whileHover={{ y: -12 }}
+                className="bg-white p-10 rounded-3xl shadow-xl text-center border border-slate-200 min-h-[380px] flex flex-col justify-between"
+              >
+                <div>
+                  <div className={`w-32 h-32 mx-auto mb-8 rounded-full flex items-center justify-center shadow-2xl bg-gradient-to-br ${
+                    i === 0 ? 'from-purple-500 to-purple-700' :
+                    i === 1 ? 'from-blue-500 to-blue-700' :
+                    i === 2 ? 'from-emerald-500 to-emerald-700' :
+                    'from-amber-500 to-amber-700'
+                  }`}>
+                    <item.icon className="w-16 h-16 text-white" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-slate-800 mb-6">{item.title}</h3>
+                </div>
+                <p className="text-lg text-slate-600 leading-relaxed flex-grow">
+                  {item.desc}
+                </p>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
-
-      <section style={{ padding: '120px 0', background: '#f8fafc' }}>
-        <div style={{ maxWidth: 1400, margin: '0 auto', padding: '0 40px' }}>
-          <h2 style={{ fontSize: '52px', fontWeight: '900', textAlign: 'center', color: '#1e293b', marginBottom: 100 }}>
-            Кому помогает оценка
-          </h2>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: 60 }}>
-            <motion.div whileHover={{ scale: 1.05 }} style={{ background: 'white', borderRadius: 32, padding: 56, boxShadow: '0 15px 50px rgba(0,0,0,0.08)', textAlign: 'center' }}>
-              <div style={{ fontSize: '120px', marginBottom: 40 }}>💰</div>
-              <h3 style={{ fontSize: '34px', fontWeight: '700', marginBottom: 24 }}>Продавцу</h3>
-              <p style={{ fontSize: '22px', color: '#64748b', lineHeight: '1.6' }}>
-                Назначьте правильную цену — продайте быстро и без торга ниже рынка
-              </p>
-            </motion.div>
-
-            <motion.div whileHover={{ scale: 1.05 }} style={{ background: 'white', borderRadius: 32, padding: 56, boxShadow: '0 15px 50px rgba(0,0,0,0.08)', textAlign: 'center' }}>
-              <div style={{ fontSize: '120px', marginBottom: 40 }}>🔍</div>
-              <h3 style={{ fontSize: '34px', fontWeight: '700', marginBottom: 24 }}>Покупателю</h3>
-              <p style={{ fontSize: '22px', color: '#64748b', lineHeight: '1.6' }}>
-                Понимайте реальную стоимость — торгуйтесь уверенно и не переплачивайте
-              </p>
-            </motion.div>
-
-            <motion.div whileHover={{ scale: 1.05 }} style={{ background: 'white', borderRadius: 32, padding: 56, boxShadow: '0 15px 50px rgba(0,0,0,0.08)', textAlign: 'center' }}>
-              <div style={{ fontSize: '120px', marginBottom: 40 }}>📊</div>
-              <h3 style={{ fontSize: '34px', fontWeight: '700', marginBottom: 24 }}>Рынку</h3>
-              <p style={{ fontSize: '22px', color: '#64748b', lineHeight: '1.6' }}>
-                Делаем рынок автомобилей с пробегом прозрачным и предсказуемым
-              </p>
-            </motion.div>
+      <footer className="bg-slate-900 text-white py-16">
+        <div className="max-w-7xl mx-auto px-6 text-center">
+          <div className="flex items-center justify-center gap-4 mb-8">
+            <Car className="w-12 h-12" />
+            <h3 className="text-4xl font-black">AutoPrice</h3>
           </div>
-        </div>
-      </section>
-
-      <section style={{ padding: '120px 0', background: '#ffffff' }}>
-        <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 40px' }}>
-          <h2 style={{ fontSize: '52px', fontWeight: '900', textAlign: 'center', color: '#1e293b', marginBottom: 100 }}>
-            Вопросы и ответы
-          </h2>
-          <div style={{ background: '#f1f5f9', borderRadius: 32, padding: 56, boxShadow: '0 10px 40px rgba(0,0,0,0.05)' }}>
-            <details style={{ marginBottom: 40 }}>
-              <summary style={{ fontSize: '26px', fontWeight: '600', cursor: 'pointer', padding: '24px 0', borderBottom: '1px solid #e2e8f0' }}>
-                Откуда берутся данные?
-              </summary>
-              <p style={{ fontSize: '20px', color: '#475569', padding: '24px 0', lineHeight: '1.6' }}>
-                Из анализа реальных объявлений на площадках по продаже автомобилей. Мы учитываем регион, пробег, состояние, комплектацию и динамику рынка.
-              </p>
-            </details>
-            <details style={{ marginBottom: 40 }}>
-              <summary style={{ fontSize: '26px', fontWeight: '600', cursor: 'pointer', padding: '24px 0', borderBottom: '1px solid #e2e8f0' }}>
-                Почему цена отличается от объявлений?
-              </summary>
-              <p style={{ fontSize: '20px', color: '#475569', padding: '24px 0', lineHeight: '1.6' }}>
-                Мы показываем среднюю рыночную цену. Конкретное объявление может быть выше (срочная продажа) или ниже (торг, состояние).
-              </p>
-            </details>
-            <details>
-              <summary style={{ fontSize: '26px', fontWeight: '600', cursor: 'pointer', padding: '24px 0', borderBottom: '1px solid #e2e8f0' }}>
-                Можно ли доверять оценке?
-              </summary>
-              <p style={{ fontSize: '20px', color: '#475569', padding: '24px 0', lineHeight: '1.6' }}>
-                Да. Модель учитывает 10+ параметров и показывает диапазон, в котором 90% автомобилей продаются в течение 30 дней.
-              </p>
-            </details>
-          </div>
-        </div>
-      </section>
-
-      <footer style={{ background: '#0f172a', color: 'white', padding: '80px 0' }}>
-        <div style={{ maxWidth: 1400, margin: '0 auto', padding: '0 40px', textAlign: 'center' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 16, marginBottom: 32 }}>
-            <Car size={48} />
-            <h3 style={{ fontSize: '36px', fontWeight: '900', margin: 0 }}>Оценка Авто</h3>
-          </div>
-          <p style={{ fontSize: '20px', color: '#94a3b8', marginBottom: 40 }}>
-              Декабрь 2025 · Все данные основаны на анализе рынка РФ
+          <p className="text-xl text-slate-300 mb-6">
+            Декабрь 2025 · Все данные основаны на анализе рынка РФ
           </p>
-          <p style={{ fontSize: '18px', color: '#64748b' }}>
+          <p className="text-slate-500">
             Не является публичной офертой. Цены ориентировочные.
           </p>
         </div>

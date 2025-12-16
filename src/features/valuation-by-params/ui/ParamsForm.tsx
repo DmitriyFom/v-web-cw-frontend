@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { motion } from 'framer-motion';
 import { Car, Gauge, Wrench, Fuel, Settings, AlertTriangle, Calendar, Globe, Package } from 'lucide-react';
 
 const brands = [
@@ -28,9 +29,9 @@ const bodyTypes = ['Седан', 'Хэтчбек', 'Универсал', 'Вне
 const engineTypes = ['Бензин', 'Дизель', 'Электро', 'Гибрид'];
 const transmissionTypes = ['Механика', 'Автомат', 'Робот', 'Вариатор'];
 const doorCounts = ['2', '3', '4', '5'];
-const regions = ['Москва', 'СПб', 'Регионы России']; 
-const conditions = ['Отличное', 'Хорошее', 'Среднее']; 
-const complectations = ['Базовая', 'Средняя', 'Премиум']; 
+const regions = ['Москва', 'СПб', 'Регионы России'];
+const conditions = ['Отличное', 'Хорошее', 'Среднее'];
+const complectations = ['Базовая', 'Средняя', 'Премиум'];
 
 export const ParamsForm = () => {
   const [brand, setBrand] = useState('');
@@ -41,9 +42,9 @@ export const ParamsForm = () => {
   const [engine, setEngine] = useState('');
   const [transmission, setTransmission] = useState('');
   const [doors, setDoors] = useState('');
-  const [region, setRegion] = useState(''); 
-  const [condition, setCondition] = useState(''); 
-  const [complectation, setComplectation] = useState(''); 
+  const [region, setRegion] = useState('');
+  const [condition, setCondition] = useState('');
+  const [complectation, setComplectation] = useState('');
   const [accident, setAccident] = useState(false);
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<any>(null);
@@ -99,366 +100,225 @@ export const ParamsForm = () => {
   };
 
   return (
-    <div style={{ maxWidth: 800, margin: '0 auto', padding: '40px 20px' }}>
-      <h2 style={{ fontSize: '2.4rem', fontWeight: '900', textAlign: 'center', marginBottom: 32, color: '#1e293b' }}>
+    <div className="max-w-4xl mx-auto px-6 py-12">
+      <h2 className="text-4xl md:text-5xl font-black text-center text-slate-900 mb-12">
         Оценка по характеристикам
       </h2>
 
-      {/* Прогресс-бар */}
-      <div style={{ marginBottom: 40 }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 12 }}>
-          <span style={{ fontSize: '1.1rem', color: '#64748b' }}>Заполнено полей</span>
-          <span style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#1e293b' }}>{filled}/11</span>
+      <div className="mb-12">
+        <div className="flex justify-between items-center mb-3">
+          <span className="text-lg text-slate-600">Заполнено полей</span>
+          <span className="text-xl font-bold text-slate-900">{filled}/11</span>
         </div>
-        <div style={{ height: 14, background: '#e2e8f0', borderRadius: 8, overflow: 'hidden' }}>
+        <div className="h-4 bg-slate-200 rounded-full overflow-hidden">
           <div
-            style={{
-              width: `${progress}%`,
-              height: '100%',
-              background: 'linear-gradient(90deg, #4f46e5, #7c3aed)',
-              borderRadius: 8,
-              transition: 'width 0.5s ease',
-            }}
+            className="h-full bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full transition-all duration-500"
+            style={{ width: `${progress}%` }}
           />
         </div>
       </div>
 
-      <form onSubmit={handleSubmit}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24, marginBottom: 32 }}>
-          {/* Марка */}
-          <div style={{ position: 'relative' }}>
-            <Car style={{ position: 'absolute', left: 16, top: 20, color: '#64748b' }} size={28} />
-            <select
-              value={brand}
-              onChange={(e) => { setBrand(e.target.value); setModel(''); }}
-              required
-              style={{
-                padding: '20px 20px 20px 60px',
-                fontSize: '1.2rem',
-                borderRadius: 16,
-                border: '3px solid #e2e8f0',
-                width: '100%',
-                transition: 'border 0.3s',
-              }}
-              onFocus={(e) => (e.target.style.borderColor = '#4f46e5')}
-              onBlur={(e) => (e.target.style.borderColor = '#e2e8f0')}
-            >
-              <option value="">Марка автомобиля</option>
-              {brands.map((b) => <option key={b}>{b}</option>)}
-            </select>
-          </div>
-
-          {/* Модель */}
-          <div style={{ position: 'relative' }}>
-            <Wrench style={{ position: 'absolute', left: 16, top: 20, color: '#64748b' }} size={28} />
-            <select
-              value={model}
-              onChange={(e) => setModel(e.target.value)}
-              required
-              disabled={!brand}
-              style={{
-                padding: '20px 20px 20px 60px',
-                fontSize: '1.2rem',
-                borderRadius: 16,
-                border: '3px solid #e2e8f0',
-                width: '100%',
-                transition: 'border 0.3s',
-              }}
-              onFocus={(e) => (e.target.style.borderColor = '#4f46e5')}
-              onBlur={(e) => (e.target.style.borderColor = '#e2e8f0')}
-            >
-              <option value="">Модель</option>
-              {(modelsByBrand[brand] || []).map((m) => <option key={m}>{m}</option>)}
-            </select>
-          </div>
-
-          {/* Год */}
-          <div style={{ position: 'relative' }}>
-            <Calendar style={{ position: 'absolute', left: 16, top: 20, color: '#64748b' }} size={28} />
-            <input
-              type="number"
-              min="1980"
-              max="2025"
-              placeholder="Год выпуска"
-              value={year}
-              onChange={(e) => setYear(e.target.value)}
-              required
-              style={{
-                padding: '20px 20px 20px 60px',
-                fontSize: '1.2rem',
-                borderRadius: 16,
-                border: '3px solid #e2e8f0',
-                width: '100%',
-              }}
-              onFocus={(e) => (e.target.style.borderColor = '#4f46e5')}
-              onBlur={(e) => (e.target.style.borderColor = '#e2e8f0')}
-            />
-          </div>
-
-          {/* Пробег */}
-          <div style={{ position: 'relative' }}>
-            <Gauge style={{ position: 'absolute', left: 16, top: 20, color: '#64748b' }} size={28} />
-            <input
-              type="number"
-              min="0"
-              placeholder="Пробег, км"
-              value={mileage}
-              onChange={(e) => setMileage(e.target.value)}
-              required
-              style={{
-                padding: '20px 20px 20px 60px',
-                fontSize: '1.2rem',
-                borderRadius: 16,
-                border: '3px solid #e2e8f0',
-                width: '100%',
-              }}
-              onFocus={(e) => (e.target.style.borderColor = '#4f46e5')}
-              onBlur={(e) => (e.target.style.borderColor = '#e2e8f0')}
-            />
-          </div>
-
-          {/* Тип кузова */}
-          <div style={{ position: 'relative' }}>
-            <Car style={{ position: 'absolute', left: 16, top: 20, color: '#64748b' }} size={28} />
-            <select
-              value={bodyType}
-              onChange={(e) => setBodyType(e.target.value)}
-              required
-              style={{
-                padding: '20px 20px 20px 60px',
-                fontSize: '1.2rem',
-                borderRadius: 16,
-                border: '3px solid #e2e8f0',
-                width: '100%',
-              }}
-              onFocus={(e) => (e.target.style.borderColor = '#4f46e5')}
-              onBlur={(e) => (e.target.style.borderColor = '#e2e8f0')}
-            >
-              <option value="">Тип кузова</option>
-              {bodyTypes.map((t) => <option key={t}>{t}</option>)}
-            </select>
-          </div>
-
-          {/* Двигатель */}
-          <div style={{ position: 'relative' }}>
-            <Fuel style={{ position: 'absolute', left: 16, top: 20, color: '#64748b' }} size={28} />
-            <select
-              value={engine}
-              onChange={(e) => setEngine(e.target.value)}
-              required
-              style={{
-                padding: '20px 20px 20px 60px',
-                fontSize: '1.2rem',
-                borderRadius: 16,
-                border: '3px solid #e2e8f0',
-                width: '100%',
-              }}
-              onFocus={(e) => (e.target.style.borderColor = '#4f46e5')}
-              onBlur={(e) => (e.target.style.borderColor = '#e2e8f0')}
-            >
-              <option value="">Двигатель</option>
-              {engineTypes.map((e) => <option key={e}>{e}</option>)}
-            </select>
-          </div>
-
-          {/* Коробка */}
-          <div style={{ position: 'relative' }}>
-            <Settings style={{ position: 'absolute', left: 16, top: 20, color: '#64748b' }} size={28} />
-            <select
-              value={transmission}
-              onChange={(e) => setTransmission(e.target.value)}
-              required
-              style={{
-                padding: '20px 20px 20px 60px',
-                fontSize: '1.2rem',
-                borderRadius: 16,
-                border: '3px solid #e2e8f0',
-                width: '100%',
-              }}
-              onFocus={(e) => (e.target.style.borderColor = '#4f46e5')}
-              onBlur={(e) => (e.target.style.borderColor = '#e2e8f0')}
-            >
-              <option value="">Коробка передач</option>
-              {transmissionTypes.map((t) => <option key={t}>{t}</option>)}
-            </select>
-          </div>
-
-          {/* Двери */}
-          <div style={{ position: 'relative' }}>
-            <Car style={{ position: 'absolute', left: 16, top: 20, color: '#64748b' }} size={28} />
-            <select
-              value={doors}
-              onChange={(e) => setDoors(e.target.value)}
-              required
-              style={{
-                padding: '20px 20px 20px 60px',
-                fontSize: '1.2rem',
-                borderRadius: 16,
-                border: '3px solid #e2e8f0',
-                width: '100%',
-              }}
-              onFocus={(e) => (e.target.style.borderColor = '#4f46e5')}
-              onBlur={(e) => (e.target.style.borderColor = '#e2e8f0')}
-            >
-              <option value="">Количество дверей</option>
-              {doorCounts.map((d) => <option key={d}>{d}</option>)}
-            </select>
-          </div>
-
-          {/* Регион */}
-          <div style={{ position: 'relative' }}>
-            <Globe style={{ position: 'absolute', left: 16, top: 20, color: '#64748b' }} size={28} />
-            <select
-              value={region}
-              onChange={(e) => setRegion(e.target.value)}
-              required
-              style={{
-                padding: '20px 20px 20px 60px',
-                fontSize: '1.2rem',
-                borderRadius: 16,
-                border: '3px solid #e2e8f0',
-                width: '100%',
-              }}
-              onFocus={(e) => (e.target.style.borderColor = '#4f46e5')}
-              onBlur={(e) => (e.target.style.borderColor = '#e2e8f0')}
-            >
-              <option value="">Регион</option>
-              {regions.map((r) => <option key={r}>{r}</option>)}
-            </select>
-          </div>
-
-          {/* Состояние */}
-          <div style={{ position: 'relative' }}>
-            <Wrench style={{ position: 'absolute', left: 16, top: 20, color: '#64748b' }} size={28} />
-            <select
-              value={condition}
-              onChange={(e) => setCondition(e.target.value)}
-              required
-              style={{
-                padding: '20px 20px 20px 60px',
-                fontSize: '1.2rem',
-                borderRadius: 16,
-                border: '3px solid #e2e8f0',
-                width: '100%',
-              }}
-              onFocus={(e) => (e.target.style.borderColor = '#4f46e5')}
-              onBlur={(e) => (e.target.style.borderColor = '#e2e8f0')}
-            >
-              <option value="">Состояние</option>
-              {conditions.map((c) => <option key={c}>{c}</option>)}
-            </select>
-          </div>
-
-          {/* Комплектация */}
-          <div style={{ position: 'relative' }}>
-            <Package style={{ position: 'absolute', left: 16, top: 20, color: '#64748b' }} size={28} />
-            <select
-              value={complectation}
-              onChange={(e) => setComplectation(e.target.value)}
-              required
-              style={{
-                padding: '20px 20px 20px 60px',
-                fontSize: '1.2rem',
-                borderRadius: 16,
-                border: '3px solid #e2e8f0',
-                width: '100%',
-              }}
-              onFocus={(e) => (e.target.style.borderColor = '#4f46e5')}
-              onBlur={(e) => (e.target.style.borderColor = '#e2e8f0')}
-            >
-              <option value="">Комплектация</option>
-              {complectations.map((c) => <option key={c}>{c}</option>)}
-            </select>
-          </div>
+      <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+        <div className="relative">
+          <Car className="absolute left-5 top-6 text-slate-500" size={28} />
+          <select
+            value={brand}
+            onChange={(e) => { setBrand(e.target.value); setModel(''); }}
+            required
+            className="w-full pl-14 pr-5 py-6 text-lg rounded-2xl border-3 border-slate-300 focus:border-indigo-500 transition-colors appearance-none bg-white"
+          >
+            <option value="">Марка автомобиля</option>
+            {brands.map((b) => <option key={b}>{b}</option>)}
+          </select>
         </div>
 
-        {/* ДТП */}
-        <label style={{ display: 'flex', alignItems: 'center', gap: 16, fontSize: '1.2rem', marginBottom: 40, cursor: 'pointer' }}>
-          <AlertTriangle size={32} color={accident ? '#ef4444' : '#64748b'} />
-          <span>Автомобиль был в ДТП</span>
+        <div className="relative">
+          <Wrench className="absolute left-5 top-6 text-slate-500" size={28} />
+          <select
+            value={model}
+            onChange={(e) => setModel(e.target.value)}
+            required
+            disabled={!brand}
+            className="w-full pl-14 pr-5 py-6 text-lg rounded-2xl border-3 border-slate-300 focus:border-indigo-500 transition-colors appearance-none bg-white disabled:opacity-60"
+          >
+            <option value="">Модель</option>
+            {(modelsByBrand[brand] || []).map((m) => <option key={m}>{m}</option>)}
+          </select>
+        </div>
+
+        <div className="relative">
+          <Calendar className="absolute left-5 top-6 text-slate-500" size={28} />
           <input
-            type="checkbox"
-            checked={accident}
-            onChange={(e) => setAccident(e.target.checked)}
-            style={{ width: 28, height: 28, accentColor: '#ef4444' }}
+            type="number"
+            min="1980"
+            max="2025"
+            placeholder="Год выпуска"
+            value={year}
+            onChange={(e) => setYear(e.target.value)}
+            required
+            className="w-full pl-14 pr-5 py-6 text-lg rounded-2xl border-3 border-slate-300 focus:border-indigo-500 transition-colors"
           />
-        </label>
+        </div>
 
-        {/* Ошибка */}
-        {error && (
-          <div style={{
-            padding: 20,
-            background: '#fee2e2',
-            border: '2px solid #fca5a5',
-            borderRadius: 16,
-            color: '#991b1b',
-            textAlign: 'center',
-            marginBottom: 24,
-          }}>
-            {error}
-          </div>
-        )}
+        <div className="relative">
+          <Gauge className="absolute left-5 top-6 text-slate-500" size={28} />
+          <input
+            type="number"
+            min="0"
+            placeholder="Пробег, км"
+            value={mileage}
+            onChange={(e) => setMileage(e.target.value)}
+            required
+            className="w-full pl-14 pr-5 py-6 text-lg rounded-2xl border-3 border-slate-300 focus:border-indigo-500 transition-colors"
+          />
+        </div>
 
-        {/* Кнопка */}
-        <button
-          type="submit"
-          disabled={loading || filled < 11}
-          style={{
-            width: '100%',
-            padding: '24px',
-            fontSize: '1.6rem',
-            fontWeight: 'bold',
-            background: filled === 11 && !loading ? 'linear-gradient(135deg, #4f46e5, #7c3aed)' : '#e2e8f0',
-            color: 'white',
-            border: 'none',
-            borderRadius: 20,
-            cursor: filled === 11 && !loading ? 'pointer' : 'not-allowed',
-            boxShadow: filled === 11 ? '0 20px 50px rgba(79,70,229,0.4)' : 'none',
-            transition: 'all 0.4s',
-          }}
-        >
-          {loading ? 'Оцениваем...' : 'Оценить стоимость'}
-        </button>
+        <div className="relative">
+          <Car className="absolute left-5 top-6 text-slate-500" size={28} />
+          <select
+            value={bodyType}
+            onChange={(e) => setBodyType(e.target.value)}
+            required
+            className="w-full pl-14 pr-5 py-6 text-lg rounded-2xl border-3 border-slate-300 focus:border-indigo-500 transition-colors appearance-none bg-white"
+          >
+            <option value="">Тип кузова</option>
+            {bodyTypes.map((t) => <option key={t}>{t}</option>)}
+          </select>
+        </div>
+
+        <div className="relative">
+          <Fuel className="absolute left-5 top-6 text-slate-500" size={28} />
+          <select
+            value={engine}
+            onChange={(e) => setEngine(e.target.value)}
+            required
+            className="w-full pl-14 pr-5 py-6 text-lg rounded-2xl border-3 border-slate-300 focus:border-indigo-500 transition-colors appearance-none bg-white"
+          >
+            <option value="">Двигатель</option>
+            {engineTypes.map((e) => <option key={e}>{e}</option>)}
+          </select>
+        </div>
+
+        <div className="relative">
+          <Settings className="absolute left-5 top-6 text-slate-500" size={28} />
+          <select
+            value={transmission}
+            onChange={(e) => setTransmission(e.target.value)}
+            required
+            className="w-full pl-14 pr-5 py-6 text-lg rounded-2xl border-3 border-slate-300 focus:border-indigo-500 transition-colors appearance-none bg-white"
+          >
+            <option value="">Коробка передач</option>
+            {transmissionTypes.map((t) => <option key={t}>{t}</option>)}
+          </select>
+        </div>
+
+        <div className="relative">
+          <Car className="absolute left-5 top-6 text-slate-500" size={28} />
+          <select
+            value={doors}
+            onChange={(e) => setDoors(e.target.value)}
+            required
+            className="w-full pl-14 pr-5 py-6 text-lg rounded-2xl border-3 border-slate-300 focus:border-indigo-500 transition-colors appearance-none bg-white"
+          >
+            <option value="">Количество дверей</option>
+            {doorCounts.map((d) => <option key={d}>{d}</option>)}
+          </select>
+        </div>
+
+        <div className="relative">
+          <Globe className="absolute left-5 top-6 text-slate-500" size={28} />
+          <select
+            value={region}
+            onChange={(e) => setRegion(e.target.value)}
+            required
+            className="w-full pl-14 pr-5 py-6 text-lg rounded-2xl border-3 border-slate-300 focus:border-indigo-500 transition-colors appearance-none bg-white"
+          >
+            <option value="">Регион</option>
+            {regions.map((r) => <option key={r}>{r}</option>)}
+          </select>
+        </div>
+
+        <div className="relative">
+          <Wrench className="absolute left-5 top-6 text-slate-500" size={28} />
+          <select
+            value={condition}
+            onChange={(e) => setCondition(e.target.value)}
+            required
+            className="w-full pl-14 pr-5 py-6 text-lg rounded-2xl border-3 border-slate-300 focus:border-indigo-500 transition-colors appearance-none bg-white"
+          >
+            <option value="">Состояние</option>
+            {conditions.map((c) => <option key={c}>{c}</option>)}
+          </select>
+        </div>
+
+        <div className="relative">
+          <Package className="absolute left-5 top-6 text-slate-500" size={28} />
+          <select
+            value={complectation}
+            onChange={(e) => setComplectation(e.target.value)}
+            required
+            className="w-full pl-14 pr-5 py-6 text-lg rounded-2xl border-3 border-slate-300 focus:border-indigo-500 transition-colors appearance-none bg-white"
+          >
+            <option value="">Комплектация</option>
+            {complectations.map((c) => <option key={c}>{c}</option>)}
+          </select>
+        </div>
       </form>
 
-      {/* Результат */}
-      {result && (
-        <div
-          style={{
-            marginTop: 60,
-            padding: 48,
-            background: 'linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%)',
-            border: '4px solid #22c55e',
-            borderRadius: 32,
-            textAlign: 'center',
-            boxShadow: '0 30px 80px rgba(34,197,94,0.2)',
-          }}
-        >
-          <Car size={80} style={{ color: '#16a34a', marginBottom: 32 }} />
-          <h3 style={{ fontSize: '2.8rem', color: '#166534', marginBottom: 32 }}>
-            Оценка готова!
-          </h3>
+      <label className="flex items-center gap-5 text-xl mb-12 cursor-pointer">
+        <AlertTriangle size={36} className={accident ? 'text-red-500' : 'text-slate-500'} />
+        <span className="text-slate-800">Автомобиль был в ДТП</span>
+        <input
+          type="checkbox"
+          checked={accident}
+          onChange={(e) => setAccident(e.target.checked)}
+          className="w-8 h-8 accent-red-500 rounded"
+        />
+      </label>
 
-          <p style={{ fontSize: '2rem', fontWeight: 'bold', color: '#166534', marginBottom: 24 }}>
+      {error && (
+        <div className="bg-red-100 border-2 border-red-300 text-red-800 text-center py-5 px-8 rounded-2xl mb-8 text-lg">
+          {error}
+        </div>
+      )}
+
+      <button
+        type="submit"
+        disabled={loading || filled < 11}
+        onClick={handleSubmit}
+        className={`w-full py-7 text-2xl font-bold rounded-2xl transition-all shadow-xl ${
+          filled === 11 && !loading
+            ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white hover:shadow-2xl hover:shadow-purple-500/40'
+            : 'bg-slate-200 text-slate-500 cursor-not-allowed'
+        }`}
+      >
+        {loading ? 'Оцениваем...' : 'Оценить стоимость'}
+      </button>
+
+      {result && (
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mt-20 p-12 bg-gradient-to-br from-green-50 to-emerald-50 border-4 border-green-500 rounded-3xl text-center shadow-2xl"
+        >
+          <Car className="w-20 h-20 text-green-600 mx-auto mb-8" />
+          <h3 className="text-4xl font-black text-green-800 mb-8">Оценка готова!</h3>
+          <p className="text-2xl font-bold text-green-700 mb-6">
             {result.brand} {result.model} • {result.year} г.
           </p>
-
-          <p style={{ fontSize: '1.4rem', color: '#4b5563', marginBottom: 40 }}>
+          <p className="text-lg text-slate-600 mb-10">
             Пробег: {Number(result.mileage).toLocaleString('ru-RU')} км • ДТП: {result.accident ? 'Да' : 'Нет'}
           </p>
-
-          <div style={{ fontSize: '5rem', fontWeight: 900, color: '#16a34a', margin: '40px 0' }}>
+          <div className="text-6xl font-black text-green-600 my-10">
             {(result.price.avg / 1000000).toFixed(2)} млн ₽
           </div>
-
-          <p style={{ fontSize: '1.6rem', color: '#374151' }}>
+          <p className="text-xl text-slate-700 mb-8">
             Рыночный диапазон: от {(result.price.min / 1000000).toFixed(2)} до {(result.price.max / 1000000).toFixed(2)} млн ₽
           </p>
-
-          <p style={{ fontSize: '1rem', color: '#6b7280', marginTop: 40 }}>
+          <p className="text-sm text-slate-500">
             {result.source}
           </p>
-        </div>
+        </motion.div>
       )}
     </div>
   );

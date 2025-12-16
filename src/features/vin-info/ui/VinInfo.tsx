@@ -1,28 +1,28 @@
 import { useState } from 'react';
+import { motion } from 'framer-motion';
 import { Globe, Factory, Car, Calendar, CheckCircle, Hash, Info } from 'lucide-react';
 
 export const VinInfo = () => {
   const [vin, setVin] = useState('');
 
-  // Очистка и ограничение: только допустимые символы VIN, максимум 17
   const handleVinChange = (value: string) => {
     const cleaned = value
       .toUpperCase()
-      .replace(/[^A-HJ-NPR-Z0-9]/g, '')  // Убираем недопустимые символы (включая I, O, Q)
+      .replace(/[^A-HJ-NPR-Z0-9]/g, '')
       .slice(0, 17);
-
     setVin(cleaned);
   };
 
-  const upperVin = vin; // Уже очищено и в верхнем регистре
+  const upperVin = vin;
+  const isFullVin = upperVin.length === 17;
 
   const positions = [
-    { pos: '1-3', title: 'WMI — Производитель и страна', desc: 'Первые 3 символа: код производителя (WMI). Например, J — Япония, X — Россия, 1/4/5 — США.', icon: <Globe size={32} /> },
-    { pos: '4-8', title: 'VDS — Характеристики авто', desc: 'Тип кузова, модель, двигатель, системы безопасности. Зависит от производителя.', icon: <Car size={32} /> },
-    { pos: '9', title: 'Контрольная цифра', desc: 'Check digit — проверка подлинности VIN по математической формуле.', icon: <CheckCircle size={32} /> },
-    { pos: '10', title: 'Год выпуска', desc: 'Код года: S=2025, T=2026, A=2010, 1=2001 и т.д. (цикл каждые 30 лет).', icon: <Calendar size={32} /> },
-    { pos: '11', title: 'Завод сборки', desc: 'Код завода, где собрано авто (зависит от производителя).', icon: <Factory size={32} /> },
-    { pos: '12-17', title: 'Серийный номер', desc: 'Уникальный номер конкретного автомобиля.', icon: <Hash size={32} /> },
+    { pos: '1-3', title: 'WMI — Производитель и страна', desc: 'Первые 3 символа: код производителя (WMI). Например, J — Япония, X — Россия, 1/4/5 — США.', icon: <Globe className="w-12 h-12" /> },
+    { pos: '4-8', title: 'VDS — Характеристики авто', desc: 'Тип кузова, модель, двигатель, системы безопасности. Зависит от производителя.', icon: <Car className="w-12 h-12" /> },
+    { pos: '9', title: 'Контрольная цифра', desc: 'Check digit — проверка подлинности VIN по математической формуле.', icon: <CheckCircle className="w-12 h-12" /> },
+    { pos: '10', title: 'Год выпуска', desc: 'Код года: S=2025, T=2026, A=2010, 1=2001 и т.д. (цикл каждые 30 лет).', icon: <Calendar className="w-12 h-12" /> },
+    { pos: '11', title: 'Завод сборки', desc: 'Код завода, где собрано авто (зависит от производителя).', icon: <Factory className="w-12 h-12" /> },
+    { pos: '12-17', title: 'Серийный номер', desc: 'Уникальный номер конкретного автомобиля.', icon: <Hash className="w-12 h-12" /> },
   ];
 
   const getVinPart = (pos: string) => {
@@ -35,95 +35,109 @@ export const VinInfo = () => {
   };
 
   return (
-    <div style={{ maxWidth: 1200, margin: '0 auto', padding: 40 }}>
-      <h2 style={{ fontSize: '48px', fontWeight: '900', textAlign: 'center', marginBottom: 32 }}>
+    <div className="max-w-7xl mx-auto px-6 py-16">
+      <motion.h2
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="text-4xl md:text-5xl font-black text-center text-slate-900 mb-8"
+      >
         Что такое VIN и как его расшифровать?
-      </h2>
-      <p style={{ fontSize: '22px', textAlign: 'center', color: '#475569', marginBottom: 60 }}>
-        VIN — это уникальный 17-значный код автомобиля, как отпечаток пальца. Он содержит информацию о производителе, характеристиках и истории авто.
-      </p>
+      </motion.h2>
 
-      {/* Интерактивный ввод VIN с ограничением */}
-      <div style={{ marginBottom: 60, textAlign: 'center' }}>
-        <p style={{ fontSize: '20px', marginBottom: 16 }}>Введите VIN для подсветки расшифровки:</p>
+      <motion.p
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.3 }}
+        className="text-xl md:text-2xl text-center text-slate-600 max-w-4xl mx-auto mb-16 leading-relaxed"
+      >
+        VIN — это уникальный 17-значный код автомобиля, как отпечаток пальца. Он содержит информацию о производителе, характеристиках и истории авто.
+      </motion.p>
+
+      <div className="max-w-2xl mx-auto mb-20">
+        <p className="text-xl text-center text-slate-700 mb-6">
+          Введите VIN для интерактивной расшифровки:
+        </p>
+
         <input
           type="text"
           value={vin}
-          onChange={e => handleVinChange(e.target.value)}
+          onChange={(e) => handleVinChange(e.target.value)}
           placeholder="Например: XTA219000P1234567"
-          style={{
-            padding: '20px 24px',
-            fontSize: '24px',
-            width: '100%',
-            maxWidth: 600,
-            borderRadius: 20,
-            border: '3px solid #e2e8f0',
-            textAlign: 'center',
-            letterSpacing: '4px',
-            fontFamily: 'monospace',
-            transition: 'all 0.3s',
-          }}
-          onFocus={e => e.target.style.borderColor = '#4f46e5'}
-          onBlur={e => e.target.style.borderColor = '#e2e8f0'}
+          maxLength={17}
+          className="w-full px-8 py-8 text-3xl font-mono tracking-widest text-center rounded-3xl border-4 border-slate-300 focus:border-indigo-500 transition-all bg-white shadow-2xl outline-none"
+          autoFocus
         />
 
-        {/* Счётчик и сообщение */}
-        <div style={{ marginTop: 16, fontSize: '18px', color: '#64748b' }}>
-          Введено: <strong>{upperVin.length}/17</strong> символов
+        <div className="mt-6 text-center">
+          <p className="text-lg text-slate-600">
+            Введено: <span className="font-bold text-indigo-600">{upperVin.length}/17</span> символов
+          </p>
+
+          {isFullVin && (
+            <p className="mt-4 text-2xl font-bold text-green-600 animate-pulse">
+              VIN полный — смотрите расшифровку ниже!
+            </p>
+          )}
+
+          {upperVin.length > 0 && upperVin.length < 17 && (
+            <p className="mt-4 text-xl font-semibold text-red-600">
+              Введите все 17 символов для полной расшифровки
+            </p>
+          )}
         </div>
-
-        {upperVin.length === 17 && (
-          <p style={{ marginTop: 12, color: '#10b981', fontWeight: 'bold', fontSize: '20px' }}>
-            VIN полный — смотрите подсветку ниже!
-          </p>
-        )}
-
-        {upperVin.length > 0 && upperVin.length < 17 && (
-          <p style={{ marginTop: 12, color: '#ef4444', fontWeight: 'bold', fontSize: '18px' }}>
-            Введите все 17 символов для полной расшифровки
-          </p>
-        )}
       </div>
 
-      {/* Визуальная схема VIN */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 32 }}>
-        {positions.map((p, i) => (
-          <div
-            key={i}
-            style={{
-              background: 'white',
-              borderRadius: 32,
-              padding: 32,
-              boxShadow: '0 15px 40px rgba(0,0,0,0.08)',
-              textAlign: 'center',
-              border: upperVin.length === 17 ? '4px solid #4f46e5' : 'none',
-              opacity: upperVin.length === 17 ? 1 : 0.7,
-              transition: 'all 0.4s',
-            }}
-          >
-            <div style={{ color: '#4f46e5', marginBottom: 20 }}>{p.icon}</div>
-            <h3 style={{ fontSize: '24px', fontWeight: '700', marginBottom: 16 }}>{p.title}</h3>
-            <p style={{ fontSize: '18px', color: '#475569', lineHeight: '1.6' }}>{p.desc}</p>
-            {upperVin && (
-              <div style={{ marginTop: 20, fontFamily: 'monospace', fontSize: '28px', letterSpacing: '4px', fontWeight: 'bold', color: '#1e293b' }}>
-                {getVinPart(p.pos)}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 mb-24">
+        {positions.map((p, i) => {
+          const part = getVinPart(p.pos);
+          const isHighlighted = isFullVin && part !== '-';
+
+          return (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.1 }}
+              className={`rounded-3xl p-10 text-center transition-all duration-500 flex flex-col ${
+                isHighlighted
+                  ? 'bg-gradient-to-br from-indigo-600 to-purple-700 text-white shadow-2xl ring-4 ring-indigo-400/50 scale-105'
+                  : 'bg-white text-slate-900 shadow-xl border border-slate-200'
+              }`}
+            >
+              <div className="flex flex-col items-center flex-grow">
+                <div className={`mb-8 ${isHighlighted ? 'text-white' : 'text-indigo-600'}`}>
+                  {p.icon}
+                </div>
+                <h3 className="text-2xl font-bold mb-6 break-words">{p.title}</h3>
+                <p className={`text-lg leading-relaxed mb-8 break-words text-balance ${isHighlighted ? 'text-indigo-100' : 'text-slate-600'}`}>
+                  {p.desc}
+                </p>
               </div>
-            )}
-          </div>
-        ))}
+
+              {upperVin && (
+                <div className={`text-4xl font-black font-mono tracking-widest break-all ${isHighlighted ? 'text-white' : 'text-slate-900'}`}>
+                  {part || '-'}
+                </div>
+              )}
+            </motion.div>
+          );
+        })}
       </div>
 
-      {/* Дополнительная информация */}
-      <div style={{ marginTop: 80, background: '#f1f5f9', borderRadius: 32, padding: 48, textAlign: 'center' }}>
-        <Info size={64} style={{ color: '#4f46e5', marginBottom: 24 }} />
-        <h3 style={{ fontSize: '32px', fontWeight: '700', marginBottom: 20 }}>Где найти VIN?</h3>
-        <p style={{ fontSize: '20px', color: '#475569', lineHeight: '1.6', maxWidth: 800, margin: '0 auto' }}>
-          • На табличке под лобовым стеклом<br />
+      <motion.div
+        initial={{ opacity: 0, y: 40 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="max-w-4xl mx-auto bg-gradient-to-r from-slate-100 to-indigo-50 rounded-3xl p-12 text-center shadow-2xl border border-slate-200"
+      >
+        <Info className="w-16 h-16 text-indigo-600 mx-auto mb-6" />
+        <h3 className="text-3xl font-black text-slate-800 mb-6">Где найти VIN?</h3>
+        <p className="text-xl text-slate-700 leading-relaxed">
+          • На табличке под лобовым стеклом (снаружи)<br />
           • В дверном проёме водителя<br />
           • В ПТС или СТС<br />
           • Под капотом или в багажнике
         </p>
-      </div>
+      </motion.div>
     </div>
   );
 };
