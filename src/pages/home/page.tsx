@@ -5,14 +5,12 @@ import { ParamsForm } from '@/features/valuation-by-params/ui/ParamsForm';
 import { VinInfo } from '@/features/vin-info/ui/VinInfo';
 import { Car, Zap, Shield, Target, TrendingUp } from 'lucide-react';
 
-
-
 export const HomePage = () => {
   const [tab, setTab] = useState<'vin' | 'params' | 'info'>('params');
 
   return (
     <div style={{ minHeight: '100vh', background: '#f8fafc', fontFamily: 'system-ui, -apple-system, sans-serif' }}>
-      {/* ШАПКА */}
+   
       <header style={{ background: 'white', boxShadow: '0 4px 20px rgba(0,0,0,0.05)', padding: '24px 0' }}>
         <div style={{ maxWidth: 1400, margin: '0 auto', padding: '0 40px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
@@ -20,7 +18,7 @@ export const HomePage = () => {
               <Car size={36} color="white" />
             </div>
             <div>
-              <h1 style={{ fontSize: '34px', fontWeight: '900', margin: 0, color: '#1e293b' }}>Оценка Авто</h1>
+              <h1 style={{ fontSize: '34px', fontWeight: '900', margin: 0, color: '#1e293b' }}>AutoPrice</h1>
               <p style={{ fontSize: '17px', color: '#64748b', margin: 0 }}>Профессиональная рыночная оценка</p>
             </div>
           </div>
@@ -48,7 +46,6 @@ export const HomePage = () => {
             Профессиональная оценка на основе анализа 500 000+ объявлений с популярных площадок по продаже автомобилей
           </motion.p>
 
-          {/* ТАБЫ */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -108,7 +105,6 @@ export const HomePage = () => {
             </button>
           </motion.div>
 
-          {/* КОНТЕНТ ВКЛАДОК */}
           <motion.div
             key={tab}
             initial={{ opacity: 0, y: 20 }}
@@ -130,7 +126,6 @@ export const HomePage = () => {
         </div>
       </section>
 
-      {/* ПРЕИМУЩЕСТВА */}
       <section style={{ padding: '120px 0', background: '#ffffff' }}>
         <div style={{ maxWidth: 1400, margin: '0 auto', padding: '0 40px' }}>
           <h2 style={{ fontSize: '52px', fontWeight: '900', textAlign: 'center', color: '#1e293b', marginBottom: 100 }}>
@@ -180,7 +175,6 @@ export const HomePage = () => {
         </div>
       </section>
 
-      {/* КАК ПОМОГАЕТ */}
       <section style={{ padding: '120px 0', background: '#f8fafc' }}>
         <div style={{ maxWidth: 1400, margin: '0 auto', padding: '0 40px' }}>
           <h2 style={{ fontSize: '52px', fontWeight: '900', textAlign: 'center', color: '#1e293b', marginBottom: 100 }}>
@@ -214,7 +208,6 @@ export const HomePage = () => {
         </div>
       </section>
 
-      {/* FAQ */}
       <section style={{ padding: '120px 0', background: '#ffffff' }}>
         <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 40px' }}>
           <h2 style={{ fontSize: '52px', fontWeight: '900', textAlign: 'center', color: '#1e293b', marginBottom: 100 }}>
@@ -249,7 +242,6 @@ export const HomePage = () => {
         </div>
       </section>
 
-      {/* ПОДВАЛ */}
       <footer style={{ background: '#0f172a', color: 'white', padding: '80px 0' }}>
         <div style={{ maxWidth: 1400, margin: '0 auto', padding: '0 40px', textAlign: 'center' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 16, marginBottom: 32 }}>
